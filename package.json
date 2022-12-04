@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:custom-server": "npx tsc --project tsconfig.server.json",
+    "start:custom-server": "node server/build/index.js"
   },
   "dependencies": {
     "@types/node": "18.11.10",
@@ -14,9 +16,13 @@
     "@types/react-dom": "18.0.9",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
+    "express": "^4.18.2",
     "next": "13.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "4.9.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14"
   }
 }
