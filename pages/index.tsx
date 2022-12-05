@@ -3,6 +3,7 @@ import Script from 'next/script';
 
 import { FacebookPlayer } from '../components/_players/facebook'
 import { TwitchPlayer } from '../components/_players/twitch'
+import { response } from 'express';
 
 
 export default function Home() {
@@ -11,7 +12,9 @@ export default function Home() {
 
     if (typeof window !== "undefined") {
 
-      
+      fetch("/getStreamers", { method: "GET" })
+      .then(response => response.json())
+      .then(data => console.log(data));
     }
 
   }, []);

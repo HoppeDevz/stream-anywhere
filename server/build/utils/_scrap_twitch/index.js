@@ -39,32 +39,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.YoutubeScrap = void 0;
+exports.TwitchScrapper = void 0;
 var puppeteer_1 = __importDefault(require("puppeteer"));
-var YoutubeScrap = /** @class */ (function () {
-    function YoutubeScrap() {
+var wait_1 = require("../../helpers/wait");
+var TwitchScrapper = /** @class */ (function () {
+    function TwitchScrapper() {
         var _this = this;
         puppeteer_1.default.launch({ headless: false }).then(function (browser) { return _this.browser = browser; });
-        setInterval(function () {
-            _this.verifyChannel("Swagg");
-        }, 5 * 1000);
     }
-    YoutubeScrap.prototype.wait = function (ms) {
-        return new Promise(function (resolve) { return setInterval(resolve, ms); });
-    };
-    YoutubeScrap.prototype.verifyChannel = function (channelUserName) {
+    TwitchScrapper.prototype.verifyChannel = function (channelUserName) {
         return __awaiter(this, void 0, void 0, function () {
-            var url, browser, page, liveURL, err_1;
+            var url, browser, page, live, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!this.browser)
-                            return [2 /*return*/];
-                        console.log("[YOUTUBE-SCRAP] - VERIFYING CHANNEL ".concat(channelUserName, "..."));
+                            return [2 /*return*/, { live: false }];
+                        console.log("[TWITCH-SCRAP] - VERIFYING CHANNEL ".concat(channelUserName, "..."));
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 7, , 8]);
-                        url = "https://www.youtube.com/@".concat(channelUserName, "/featured");
+                        url = "https://twitch.tv/".concat(channelUserName);
                         browser = this.browser;
                         return [4 /*yield*/, browser.newPage()];
                     case 2:
@@ -72,28 +67,21 @@ var YoutubeScrap = /** @class */ (function () {
                         return [4 /*yield*/, page.goto(url)];
                     case 3:
                         _a.sent();
-                        return [4 /*yield*/, this.wait(1500)];
+                        return [4 /*yield*/, (0, wait_1.wait)(3500)];
                     case 4:
                         _a.sent();
                         return [4 /*yield*/, page.evaluate(function () {
-                                var liveURL = "";
-                                var thumbs = document.querySelectorAll("#thumbnail");
-                                thumbs.forEach(function (thumb) {
-                                    if (thumb.querySelector("ytd-thumbnail-overlay-time-status-renderer[overlay-style=LIVE]")) {
-                                        var href = thumb.getAttribute("href");
-                                        if (href)
-                                            liveURL = href;
-                                    }
-                                });
-                                return Promise.resolve(liveURL);
+                                var liveIndicator = document.querySelector(".live-indicator-container");
+                                if (liveIndicator)
+                                    return Promise.resolve(true);
+                                return Promise.resolve(false);
                             })];
                     case 5:
-                        liveURL = _a.sent();
-                        console.log({ liveURL: liveURL });
+                        live = _a.sent();
                         return [4 /*yield*/, page.close()];
                     case 6:
                         _a.sent();
-                        return [3 /*break*/, 8];
+                        return [2 /*return*/, { live: live }];
                     case 7:
                         err_1 = _a.sent();
                         console.log(err_1);
@@ -103,6 +91,6 @@ var YoutubeScrap = /** @class */ (function () {
             });
         });
     };
-    return YoutubeScrap;
+    return TwitchScrapper;
 }());
-exports.YoutubeScrap = YoutubeScrap;
+exports.TwitchScrapper = TwitchScrapper;

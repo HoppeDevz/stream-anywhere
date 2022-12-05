@@ -11,7 +11,10 @@ import { YoutubeScrapper } from "../_scrap_youtube";
 
 export class Core {
 
-    private streamers: streamers = [];
+    private TWITCH_THREAD_TIMEOUT = 5 * 1000;
+    private YOUTUBE_THREAD_TIMEOUT = 5 * 1000;
+
+    public streamers: streamers = [];
 
     private twitchScrapper: TwitchScrapper = new TwitchScrapper();
     private youtubeScrapper: YoutubeScrapper = new YoutubeScrapper();
@@ -38,15 +41,15 @@ export class Core {
     //////////////////////////////// YOUTUBE THREAD ////////////////////////////////
     private async validateYoutubeStreamersThread() {
 
-        this.validateYoutubeStreamers();
+        await this.validateYoutubeStreamers();
 
-        await wait(60 * 1000);
+        await wait(this.YOUTUBE_THREAD_TIMEOUT);
         this.validateYoutubeStreamersThread();
     }
 
-    private validateYoutubeStreamers() {
+    private async validateYoutubeStreamers() {
 
-        this.streamers.forEach(async (_, index) => {
+        for (let index = 0; index < this.streamers.length; index++) {
 
             let streamer = this.streamers[index];
 
@@ -55,22 +58,22 @@ export class Core {
                 const { live, href } = await this.youtubeScrapper.verifyChannel(streamer.channelName);
                 streamer = {...streamer, live, href };
             }
-        });
+        }
     }
 
 
     //////////////////////////////// TWITCH THREAD ////////////////////////////////
     private async validateTwitchStremaersThread() {
 
-        this.validateTwitchStreamers();
+        await this.validateTwitchStreamers();
 
-        await wait(60 * 1000);
+        await wait(this.TWITCH_THREAD_TIMEOUT);
         this.validateTwitchStremaersThread();      
     }
 
-    private validateTwitchStreamers() {
+    private async validateTwitchStreamers() {
 
-        this.streamers.forEach(async (_, index) => {
+        for (let index = 0; index < this.streamers.length; index++) {
 
             let streamer = this.streamers[index];
 
@@ -80,7 +83,7 @@ export class Core {
                 streamer = {...streamer, live };
             }
 
-        });
+        }
     }
 
 }

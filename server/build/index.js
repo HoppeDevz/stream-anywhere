@@ -43,7 +43,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var http_1 = __importDefault(require("http"));
 var express_1 = __importDefault(require("express"));
 var next_1 = __importDefault(require("next"));
-var youtube_scrap_1 = require("./utils/youtube-scrap");
+// core
+var core_1 = require("./utils/core");
 var dev = process.env.NODE_ENV !== 'production';
 var hostname = process.env.CIQ_HOSTNAME || "localhost";
 var port = 3000;
@@ -51,19 +52,19 @@ var port = 3000;
 var app = (0, next_1.default)({ dev: dev, hostname: hostname, port: port });
 var nextHandler = app.getRequestHandler();
 app.prepare().then(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var app, server;
+    var app, server, core;
     return __generator(this, function (_a) {
         app = (0, express_1.default)();
         server = http_1.default.createServer(app);
-        // Youtube Channels Verifier
-        new youtube_scrap_1.YoutubeScrap();
+        core = new core_1.Core();
+        app.get("/getStreamers", core.getStreamersRoute);
         app.all("*", function (req, res) { return nextHandler(req, res); });
         server.on("error", function (err) { console.log(err); });
         server.listen(port, function () {
             var banner = "MULTI-STREAM";
             console.log(banner);
-            console.log("[CIQ] - [DEV-MODE]: ".concat(dev ? "enabled" : "disabled"));
-            console.log("[CIQ] - [PORT]: ".concat(port));
+            console.log("[MULTI-STREAM] - [DEV-MODE]: ".concat(dev ? "enabled" : "disabled"));
+            console.log("[MULTI-STREAM] - [PORT]: ".concat(port));
         });
         return [2 /*return*/];
     });

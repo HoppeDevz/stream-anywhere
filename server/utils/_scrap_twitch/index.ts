@@ -35,6 +35,8 @@ export class TwitchScrapper {
                 return Promise.resolve(false);
             });
 
+            await page.close();
+
             return { live };
 
         } catch(err) {
