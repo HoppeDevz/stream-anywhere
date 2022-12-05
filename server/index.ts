@@ -3,7 +3,9 @@
 import http, { Server as HttpServer } from 'http';
 import express, { Express } from 'express';
 import next from 'next';
-import { YoutubeScrap } from './utils/youtube-scrap';
+
+// core
+import { Core } from './utils/core';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = process.env.CIQ_HOSTNAME || "localhost";
@@ -18,8 +20,9 @@ app.prepare().then(async () => {
     const app: Express = express();
     const server: HttpServer = http.createServer(app);
 
-    // Youtube Channels Verifier
-    new YoutubeScrap();
+    // Scrappers
+    const core = new Core();
+    
 
     app.all("*", (req, res) => nextHandler(req, res));
 
@@ -30,8 +33,8 @@ app.prepare().then(async () => {
         const banner = "MULTI-STREAM";
 
         console.log(banner);
-        console.log(`[CIQ] - [DEV-MODE]: ${dev ? "enabled" : "disabled"}`);
-        console.log(`[CIQ] - [PORT]: ${port}`);
+        console.log(`[MULTI-STREAM] - [DEV-MODE]: ${dev ? "enabled" : "disabled"}`);
+        console.log(`[MULTI-STREAM] - [PORT]: ${port}`);
     });    
     
 }).catch(err => console.log(err));
