@@ -87,6 +87,7 @@ var YoutubeScrapper = /** @class */ (function () {
                         return [4 /*yield*/, page.close()];
                     case 6:
                         _a.sent();
+                        console.log("[YOUTUBE-SCRAP] - CHANNEL - ".concat(channelUserName, " | LIVE: ").concat(liveURL !== "" ? "YES" : "NO", "..."));
                         if (liveURL !== "")
                             return [2 /*return*/, { live: true, href: liveURL }];
                         return [2 /*return*/, { live: false, href: "" }];

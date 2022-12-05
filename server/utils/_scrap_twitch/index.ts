@@ -37,6 +37,8 @@ export class TwitchScrapper {
 
             await page.close();
 
+            console.log(`[TWITCH-SCRAP] - CHANNEL - ${channelUserName} | LIVE: ${live ? "YES" : "NO"}...`);
+
             return { live };
 
         } catch(err) {

@@ -48,6 +48,8 @@ export class YoutubeScrapper {
 
             await page.close();
 
+            console.log(`[YOUTUBE-SCRAP] - CHANNEL - ${channelUserName} | LIVE: ${liveURL !== "" ? "YES" : "NO"}...`);
+
             if (liveURL !== "") return { live: true, href: liveURL };
 
             return { live: false, href: "" };

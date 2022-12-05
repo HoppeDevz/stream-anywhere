@@ -81,6 +81,7 @@ var TwitchScrapper = /** @class */ (function () {
                         return [4 /*yield*/, page.close()];
                     case 6:
                         _a.sent();
+                        console.log("[TWITCH-SCRAP] - CHANNEL - ".concat(channelUserName, " | LIVE: ").concat(live ? "YES" : "NO", "..."));
                         return [2 /*return*/, { live: live }];
                     case 7:
                         err_1 = _a.sent();

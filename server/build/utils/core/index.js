@@ -53,11 +53,11 @@ var wait_1 = require("../../helpers/wait");
 // SCRAPPERS
 var _scrap_twitch_1 = require("../_scrap_twitch");
 var _scrap_youtube_1 = require("../_scrap_youtube");
+var streamersList = [];
 var Core = /** @class */ (function () {
     function Core() {
         this.TWITCH_THREAD_TIMEOUT = 5 * 1000;
         this.YOUTUBE_THREAD_TIMEOUT = 5 * 1000;
-        this.streamers = [];
         this.twitchScrapper = new _scrap_twitch_1.TwitchScrapper();
         this.youtubeScrapper = new _scrap_youtube_1.YoutubeScrapper();
         this.getStreamers();
@@ -65,11 +65,12 @@ var Core = /** @class */ (function () {
         this.validateTwitchStremaersThread();
     }
     Core.prototype.getStreamers = function () {
-        var _this = this;
-        (0, streamers_1.getStreamers)().then(function (streamers) { return _this.streamers = streamers; });
+        (0, streamers_1.getStreamers)().then(function (newStreamers) {
+            streamersList = newStreamers;
+        });
     };
     Core.prototype.getStreamersRoute = function (req, res) {
-        res.status(200).send(this.streamers);
+        res.status(200).send(streamersList);
     };
     //////////////////////////////// YOUTUBE THREAD ////////////////////////////////
     Core.prototype.validateYoutubeStreamersThread = function () {
@@ -94,16 +95,18 @@ var Core = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
+                        console.log({ streamersList: streamersList });
                         index = 0;
                         _b.label = 1;
                     case 1:
-                        if (!(index < this.streamers.length)) return [3 /*break*/, 4];
-                        streamer = this.streamers[index];
+                        if (!(index < streamersList.length)) return [3 /*break*/, 4];
+                        streamer = streamersList[index];
                         if (!(streamer.platform === "YOUTUBE")) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.youtubeScrapper.verifyChannel(streamer.channelName)];
                     case 2:
                         _a = _b.sent(), live = _a.live, href = _a.href;
                         streamer = __assign(__assign({}, streamer), { live: live, href: href });
+                        streamersList[index] = streamer;
                         _b.label = 3;
                     case 3:
                         index++;
@@ -136,16 +139,18 @@ var Core = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        console.log({ streamersList: streamersList });
                         index = 0;
                         _a.label = 1;
                     case 1:
-                        if (!(index < this.streamers.length)) return [3 /*break*/, 4];
-                        streamer = this.streamers[index];
+                        if (!(index < streamersList.length)) return [3 /*break*/, 4];
+                        streamer = streamersList[index];
                         if (!(streamer.platform === "TWITCH")) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.twitchScrapper.verifyChannel(streamer.channelName)];
                     case 2:
                         live = (_a.sent()).live;
                         streamer = __assign(__assign({}, streamer), { live: live });
+                        streamersList[index] = streamer;
                         _a.label = 3;
                     case 3:
                         index++;

@@ -3,19 +3,24 @@ import Script from 'next/script';
 
 import { FacebookPlayer } from '../components/_players/facebook'
 import { TwitchPlayer } from '../components/_players/twitch'
-import { response } from 'express';
 
 
 export default function Home() {
 
   useEffect(() => {
 
-    if (typeof window !== "undefined") {
+    const interval = setInterval(() => {
 
-      fetch("/getStreamers", { method: "GET" })
-      .then(response => response.json())
-      .then(data => console.log(data));
-    }
+      if (typeof window !== "undefined") {
+
+        fetch("/getStreamers", { method: "GET" })
+        .then(response => response.json())
+        .then(data => console.log(data));
+      }
+
+    }, 5 * 1000)
+    
+    return () => { clearInterval(interval) }
 
   }, []);
 
@@ -30,13 +35,13 @@ export default function Home() {
         channelName='xqc'
       /> */}
 
-      <FacebookPlayer 
+      {/* <FacebookPlayer 
 
         width='1280'
         height='720'
 
         channelName="n4noFPS"
-      />
+      /> */}
 
       <Script async defer src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2" />
 

@@ -8,13 +8,12 @@ import { wait } from "../../helpers/wait";
 import { TwitchScrapper } from "../_scrap_twitch";
 import { YoutubeScrapper } from "../_scrap_youtube";
 
+let streamersList = [] as streamers;
 
 export class Core {
 
     private TWITCH_THREAD_TIMEOUT = 5 * 1000;
     private YOUTUBE_THREAD_TIMEOUT = 5 * 1000;
-
-    public streamers: streamers = [];
 
     private twitchScrapper: TwitchScrapper = new TwitchScrapper();
     private youtubeScrapper: YoutubeScrapper = new YoutubeScrapper();
@@ -29,12 +28,15 @@ export class Core {
 
     private getStreamers() {
 
-        getStreamers().then(streamers => this.streamers = streamers);
+        getStreamers().then(newStreamers => {
+
+            streamersList = newStreamers;
+        });
     }
 
     public getStreamersRoute(req: Request, res: Response<streamers>) {
 
-        res.status(200).send(this.streamers);
+        res.status(200).send(streamersList);
     }
 
 
@@ -49,14 +51,19 @@ export class Core {
 
     private async validateYoutubeStreamers() {
 
-        for (let index = 0; index < this.streamers.length; index++) {
+        console.log({ streamersList })
 
-            let streamer = this.streamers[index];
+        for (let index = 0; index < streamersList.length; index++) {
+
+            // OBJECT REFERENCE
+            let streamer = streamersList[index];
 
             if (streamer.platform === "YOUTUBE") {
 
                 const { live, href } = await this.youtubeScrapper.verifyChannel(streamer.channelName);
+
                 streamer = {...streamer, live, href };
+                streamersList[index] = streamer;
             }
         }
     }
@@ -73,14 +80,19 @@ export class Core {
 
     private async validateTwitchStreamers() {
 
-        for (let index = 0; index < this.streamers.length; index++) {
+        console.log({ streamersList })
 
-            let streamer = this.streamers[index];
+        for (let index = 0; index < streamersList.length; index++) {
+
+            // OBJECT REFERENCE
+            let streamer = streamersList[index];
 
             if (streamer.platform === "TWITCH") {
 
                 const { live } = await this.twitchScrapper.verifyChannel(streamer.channelName);
+                
                 streamer = {...streamer, live };
+                streamersList[index] = streamer;
             }
 
         }
