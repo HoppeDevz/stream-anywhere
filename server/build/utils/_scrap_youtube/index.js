@@ -45,34 +45,41 @@ var wait_1 = require("../../helpers/wait");
 var YoutubeScrapper = /** @class */ (function () {
     function YoutubeScrapper() {
         var _this = this;
-        puppeteer_1.default.launch({ headless: false }).then(function (browser) { return _this.browser = browser; });
+        puppeteer_1.default.launch({ headless: true }).then(function (browser) { return _this.browser = browser; });
     }
     YoutubeScrapper.prototype.verifyChannel = function (channelUserName) {
         return __awaiter(this, void 0, void 0, function () {
-            var url, browser, page, liveURL, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var url, browser, page, _a, liveURL, avatar, err_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         if (!this.browser)
-                            return [2 /*return*/, { live: false, href: "" }];
+                            return [2 /*return*/, { live: false, href: "", avatar: "" }];
                         console.log("[YOUTUBE-SCRAP] - VERIFYING CHANNEL ".concat(channelUserName, "..."));
-                        _a.label = 1;
+                        _b.label = 1;
                     case 1:
-                        _a.trys.push([1, 7, , 8]);
+                        _b.trys.push([1, 7, , 8]);
                         url = "https://www.youtube.com/@".concat(channelUserName, "/featured");
                         browser = this.browser;
                         return [4 /*yield*/, browser.newPage()];
                     case 2:
-                        page = _a.sent();
+                        page = _b.sent();
                         return [4 /*yield*/, page.goto(url)];
                     case 3:
-                        _a.sent();
+                        _b.sent();
                         return [4 /*yield*/, (0, wait_1.wait)(3500)];
                     case 4:
-                        _a.sent();
+                        _b.sent();
                         return [4 /*yield*/, page.evaluate(function () {
                                 var liveURL = "";
+                                var avatar = "";
                                 var thumbs = document.querySelectorAll("#thumbnail");
+                                var avatarElement = document.querySelector("yt-img-shadow img");
+                                if (avatarElement) {
+                                    var avatarSrc = avatarElement.getAttribute("src");
+                                    if (avatarSrc)
+                                        avatar = avatarSrc;
+                                }
                                 thumbs.forEach(function (thumb) {
                                     if (thumb.querySelector("ytd-thumbnail-overlay-time-status-renderer[overlay-style=LIVE]")) {
                                         var href = thumb.getAttribute("href");
@@ -80,19 +87,19 @@ var YoutubeScrapper = /** @class */ (function () {
                                             liveURL = href;
                                     }
                                 });
-                                return Promise.resolve(liveURL);
+                                return Promise.resolve({ liveURL: liveURL, avatar: avatar });
                             })];
                     case 5:
-                        liveURL = _a.sent();
+                        _a = _b.sent(), liveURL = _a.liveURL, avatar = _a.avatar;
                         return [4 /*yield*/, page.close()];
                     case 6:
-                        _a.sent();
+                        _b.sent();
                         console.log("[YOUTUBE-SCRAP] - CHANNEL - ".concat(channelUserName, " | LIVE: ").concat(liveURL !== "" ? "YES" : "NO", "..."));
                         if (liveURL !== "")
-                            return [2 /*return*/, { live: true, href: liveURL }];
-                        return [2 /*return*/, { live: false, href: "" }];
+                            return [2 /*return*/, { live: true, href: liveURL, avatar: avatar }];
+                        return [2 /*return*/, { live: false, href: "", avatar: avatar }];
                     case 7:
-                        err_1 = _a.sent();
+                        err_1 = _b.sent();
                         console.log(err_1);
                         throw err_1;
                     case 8: return [2 /*return*/];

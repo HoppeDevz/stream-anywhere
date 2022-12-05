@@ -3,21 +3,22 @@ import type { streamers } from "./@types";
 export const stramers: streamers = [
     {
         id: 0,
-        channelName: "xqc",
+        channelName: "xQc",
         platform: "TWITCH",
 
-        live: false
+        live: false,
+        avatar: ""
     },
 
     {
         id: 1,
         channelName: "Swagg",
-        avatar: "",
 
         platform: "YOUTUBE",
 
         live: false,
-        href: ""
+        href: "",
+        avatar: ""
     },
 
     {
@@ -25,7 +26,8 @@ export const stramers: streamers = [
         channelName: "summit1g",
         platform: "TWITCH",
 
-        live: false
+        live: false,
+        avatar: ""
     },
 
     {
@@ -33,15 +35,17 @@ export const stramers: streamers = [
         channelName: "shroud",
         platform: "TWITCH",
 
-        live: false
+        live: false,
+        avatar: ""
     },
 
     {
         id: 4,
-        channelName: "tecnosh",
+        channelName: "Tecnosh",
         platform: "TWITCH",
 
-        live: false
+        live: false,
+        avatar: ""
     }
 ]
 

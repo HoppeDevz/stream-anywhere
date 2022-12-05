@@ -4,35 +4,39 @@ exports.getStreamers = exports.stramers = void 0;
 exports.stramers = [
     {
         id: 0,
-        channelName: "xqc",
+        channelName: "xQc",
         platform: "TWITCH",
-        live: false
+        live: false,
+        avatar: ""
     },
     {
         id: 1,
         channelName: "Swagg",
-        avatar: "",
         platform: "YOUTUBE",
         live: false,
-        href: ""
+        href: "",
+        avatar: ""
     },
     {
         id: 2,
         channelName: "summit1g",
         platform: "TWITCH",
-        live: false
+        live: false,
+        avatar: ""
     },
     {
         id: 3,
         channelName: "shroud",
         platform: "TWITCH",
-        live: false
+        live: false,
+        avatar: ""
     },
     {
         id: 4,
-        channelName: "tecnosh",
+        channelName: "Tecnosh",
         platform: "TWITCH",
-        live: false
+        live: false,
+        avatar: ""
     }
 ];
 var getStreamers = function () {

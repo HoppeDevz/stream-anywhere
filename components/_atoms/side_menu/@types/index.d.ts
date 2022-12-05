@@ -12,7 +12,7 @@ export interface youtubeStreamer {
 
     id: number
     channelName: string
-
+    
     platform: "YOUTUBE"
 
     live: boolean
@@ -20,4 +20,6 @@ export interface youtubeStreamer {
     avatar: string
 }
 
-export type streamers = (twitchStreamer | youtubeStreamer)[];
+export type streamer = (twitchStreamer | youtubeStreamer)
+
+export type streamers = streamer[];

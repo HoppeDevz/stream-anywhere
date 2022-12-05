@@ -45,46 +45,54 @@ var wait_1 = require("../../helpers/wait");
 var TwitchScrapper = /** @class */ (function () {
     function TwitchScrapper() {
         var _this = this;
-        puppeteer_1.default.launch({ headless: false }).then(function (browser) { return _this.browser = browser; });
+        puppeteer_1.default.launch({ headless: true }).then(function (browser) { return _this.browser = browser; });
     }
     TwitchScrapper.prototype.verifyChannel = function (channelUserName) {
         return __awaiter(this, void 0, void 0, function () {
-            var url, browser, page, live, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var url, browser, page, _a, live, avatar, err_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         if (!this.browser)
-                            return [2 /*return*/, { live: false }];
+                            return [2 /*return*/, { live: false, avatar: "" }];
                         console.log("[TWITCH-SCRAP] - VERIFYING CHANNEL ".concat(channelUserName, "..."));
-                        _a.label = 1;
+                        _b.label = 1;
                     case 1:
-                        _a.trys.push([1, 7, , 8]);
+                        _b.trys.push([1, 7, , 8]);
                         url = "https://twitch.tv/".concat(channelUserName);
                         browser = this.browser;
                         return [4 /*yield*/, browser.newPage()];
                     case 2:
-                        page = _a.sent();
+                        page = _b.sent();
                         return [4 /*yield*/, page.goto(url)];
                     case 3:
-                        _a.sent();
+                        _b.sent();
                         return [4 /*yield*/, (0, wait_1.wait)(3500)];
                     case 4:
-                        _a.sent();
-                        return [4 /*yield*/, page.evaluate(function () {
+                        _b.sent();
+                        return [4 /*yield*/, page.evaluate(function (channelUserName) {
+                                var live = false;
+                                var avatar = "";
                                 var liveIndicator = document.querySelector(".live-indicator-container");
+                                var avatarElement = document.querySelector(".tw-image-avatar[alt=".concat(channelUserName, "]"));
+                                if (avatarElement) {
+                                    var avatarSrc = avatarElement.getAttribute("src");
+                                    if (avatarSrc)
+                                        avatar = avatarSrc;
+                                }
                                 if (liveIndicator)
-                                    return Promise.resolve(true);
-                                return Promise.resolve(false);
-                            })];
+                                    live = true;
+                                return Promise.resolve({ live: live, avatar: avatar });
+                            }, channelUserName)];
                     case 5:
-                        live = _a.sent();
+                        _a = _b.sent(), live = _a.live, avatar = _a.avatar;
                         return [4 /*yield*/, page.close()];
                     case 6:
-                        _a.sent();
+                        _b.sent();
                         console.log("[TWITCH-SCRAP] - CHANNEL - ".concat(channelUserName, " | LIVE: ").concat(live ? "YES" : "NO", "..."));
-                        return [2 /*return*/, { live: live }];
+                        return [2 /*return*/, { live: live, avatar: avatar }];
                     case 7:
-                        err_1 = _a.sent();
+                        err_1 = _b.sent();
                         console.log(err_1);
                         throw err_1;
                     case 8: return [2 /*return*/];

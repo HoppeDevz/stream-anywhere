@@ -56,8 +56,8 @@ var _scrap_youtube_1 = require("../_scrap_youtube");
 var streamersList = [];
 var Core = /** @class */ (function () {
     function Core() {
-        this.TWITCH_THREAD_TIMEOUT = 5 * 1000;
-        this.YOUTUBE_THREAD_TIMEOUT = 5 * 1000;
+        this.TWITCH_THREAD_TIMEOUT = 60 * 1000;
+        this.YOUTUBE_THREAD_TIMEOUT = 60 * 1000;
         this.twitchScrapper = new _scrap_twitch_1.TwitchScrapper();
         this.youtubeScrapper = new _scrap_youtube_1.YoutubeScrapper();
         this.getStreamers();
@@ -135,23 +135,23 @@ var Core = /** @class */ (function () {
     };
     Core.prototype.validateTwitchStreamers = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var index, streamer, live;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var index, streamer, _a, live, avatar;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         console.log({ streamersList: streamersList });
                         index = 0;
-                        _a.label = 1;
+                        _b.label = 1;
                     case 1:
                         if (!(index < streamersList.length)) return [3 /*break*/, 4];
                         streamer = streamersList[index];
                         if (!(streamer.platform === "TWITCH")) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.twitchScrapper.verifyChannel(streamer.channelName)];
                     case 2:
-                        live = (_a.sent()).live;
-                        streamer = __assign(__assign({}, streamer), { live: live });
+                        _a = _b.sent(), live = _a.live, avatar = _a.avatar;
+                        streamer = __assign(__assign({}, streamer), { live: live, avatar: avatar });
                         streamersList[index] = streamer;
-                        _a.label = 3;
+                        _b.label = 3;
                     case 3:
                         index++;
                         return [3 /*break*/, 1];

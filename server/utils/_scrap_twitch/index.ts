@@ -7,12 +7,12 @@ export class TwitchScrapper {
 
     constructor() {
 
-        puppeteer.launch({ headless: false }).then(browser => this.browser = browser);
+        puppeteer.launch({ headless: true }).then(browser => this.browser = browser);
     }
 
-    public async verifyChannel(channelUserName: string): Promise<{ live: boolean }> {
+    public async verifyChannel(channelUserName: string): Promise<{ live: boolean, avatar: string }> {
 
-        if (!this.browser) return { live: false };
+        if (!this.browser) return { live: false, avatar: "" };
 
         console.log(`[TWITCH-SCRAP] - VERIFYING CHANNEL ${channelUserName}...`);
 
@@ -26,20 +26,32 @@ export class TwitchScrapper {
             await page.goto(url);
             await wait(3500);
 
-            const live = await page.evaluate(() => {
+            const { live, avatar } = await page.evaluate((channelUserName) => {
+
+                let live = false;
+                let avatar = "";
 
                 const liveIndicator = document.querySelector(".live-indicator-container");
+                const avatarElement = document.querySelector(`.tw-image-avatar[alt=${channelUserName}]`);
 
-                if (liveIndicator) return Promise.resolve(true);
+                if (avatarElement) {
 
-                return Promise.resolve(false);
-            });
+                    const avatarSrc = avatarElement.getAttribute("src");
+
+                    if (avatarSrc) avatar = avatarSrc;
+                } 
+
+                if (liveIndicator) live = true;
+
+                return Promise.resolve({ live, avatar });
+                
+            }, channelUserName);
 
             await page.close();
 
             console.log(`[TWITCH-SCRAP] - CHANNEL - ${channelUserName} | LIVE: ${live ? "YES" : "NO"}...`);
 
-            return { live };
+            return { live, avatar };
 
         } catch(err) {
 

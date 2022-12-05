@@ -12,8 +12,8 @@ let streamersList = [] as streamers;
 
 export class Core {
 
-    private TWITCH_THREAD_TIMEOUT = 5 * 1000;
-    private YOUTUBE_THREAD_TIMEOUT = 5 * 1000;
+    private TWITCH_THREAD_TIMEOUT = 60 * 1000;
+    private YOUTUBE_THREAD_TIMEOUT = 60 * 1000;
 
     private twitchScrapper: TwitchScrapper = new TwitchScrapper();
     private youtubeScrapper: YoutubeScrapper = new YoutubeScrapper();
@@ -89,9 +89,9 @@ export class Core {
 
             if (streamer.platform === "TWITCH") {
 
-                const { live } = await this.twitchScrapper.verifyChannel(streamer.channelName);
+                const { live, avatar } = await this.twitchScrapper.verifyChannel(streamer.channelName);
                 
-                streamer = {...streamer, live };
+                streamer = {...streamer, live, avatar };
                 streamersList[index] = streamer;
             }
 

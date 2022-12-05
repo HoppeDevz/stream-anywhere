@@ -10,12 +10,12 @@ export class YoutubeScrapper {
 
     constructor() {
 
-        puppeteer.launch({ headless: false }).then(browser => this.browser = browser);
+        puppeteer.launch({ headless: true }).then(browser => this.browser = browser);
     }
 
     public async verifyChannel(channelUserName: string): Promise<YoutubeScrapChannelStatus> {
 
-        if (!this.browser) return { live: false, href: "" };
+        if (!this.browser) return { live: false, href: "", avatar: "" };
 
         console.log(`[YOUTUBE-SCRAP] - VERIFYING CHANNEL ${channelUserName}...`);
 
@@ -29,10 +29,20 @@ export class YoutubeScrapper {
             await page.goto(url);
             await wait(3500);
 
-            const liveURL = await page.evaluate(() => {
+            const { liveURL, avatar } = await page.evaluate(() => {
 
                 let liveURL = "";
+                let avatar = "";
+
                 const thumbs = document.querySelectorAll("#thumbnail");
+                const avatarElement = document.querySelector("yt-img-shadow img");
+
+                if (avatarElement) {
+                    
+                    const avatarSrc = avatarElement.getAttribute("src");
+
+                    if (avatarSrc) avatar = avatarSrc;
+                }
 
                 thumbs.forEach(thumb => {
 
@@ -43,16 +53,16 @@ export class YoutubeScrapper {
                     }
                 });
                 
-                return Promise.resolve(liveURL);
+                return Promise.resolve({ liveURL, avatar });
             });
 
             await page.close();
 
             console.log(`[YOUTUBE-SCRAP] - CHANNEL - ${channelUserName} | LIVE: ${liveURL !== "" ? "YES" : "NO"}...`);
 
-            if (liveURL !== "") return { live: true, href: liveURL };
+            if (liveURL !== "") return { live: true, href: liveURL, avatar };
 
-            return { live: false, href: "" };
+            return { live: false, href: "", avatar };
 
         } catch(err) {
 
