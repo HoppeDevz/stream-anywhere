@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Script from 'next/script';
 
 import { FacebookPlayer } from '../components/_players/facebook'
@@ -6,6 +6,16 @@ import { TwitchPlayer } from '../components/_players/twitch'
 
 
 export default function Home() {
+
+  useEffect(() => {
+
+    if (typeof window !== "undefined") {
+
+      
+    }
+
+  }, []);
+
   return (
     <React.Fragment>
 

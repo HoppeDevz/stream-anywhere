@@ -1,21 +1,27 @@
+import { Request, Response } from "express";
 import { getStreamers } from "../../data/streamers";
 import { streamers } from "../../data/streamers/@types";
 import { wait } from "../../helpers/wait";
 
+
 // SCRAPPERS
-import { YoutubeScrap } from "../youtube-scrap";
+import { TwitchScrapper } from "../_scrap_twitch";
+import { YoutubeScrapper } from "../_scrap_youtube";
 
 
 export class Core {
 
     private streamers: streamers = [];
-    private youtubeScrap: YoutubeScrap = new YoutubeScrap();
+
+    private twitchScrapper: TwitchScrapper = new TwitchScrapper();
+    private youtubeScrapper: YoutubeScrapper = new YoutubeScrapper();
 
     constructor() {
 
         this.getStreamers();
 
         this.validateYoutubeStreamersThread();
+        this.validateTwitchStremaersThread();
     }
 
     private getStreamers() {
@@ -23,6 +29,13 @@ export class Core {
         getStreamers().then(streamers => this.streamers = streamers);
     }
 
+    public getStreamersRoute(req: Request, res: Response<streamers>) {
+
+        res.status(200).send(this.streamers);
+    }
+
+
+    //////////////////////////////// YOUTUBE THREAD ////////////////////////////////
     private async validateYoutubeStreamersThread() {
 
         this.validateYoutubeStreamers();
@@ -39,9 +52,34 @@ export class Core {
 
             if (streamer.platform === "YOUTUBE") {
 
-                const { live, href } = await this.youtubeScrap.verifyChannel(streamer.channelName);
+                const { live, href } = await this.youtubeScrapper.verifyChannel(streamer.channelName);
                 streamer = {...streamer, live, href };
             }
+        });
+    }
+
+
+    //////////////////////////////// TWITCH THREAD ////////////////////////////////
+    private async validateTwitchStremaersThread() {
+
+        this.validateTwitchStreamers();
+
+        await wait(60 * 1000);
+        this.validateTwitchStremaersThread();      
+    }
+
+    private validateTwitchStreamers() {
+
+        this.streamers.forEach(async (_, index) => {
+
+            let streamer = this.streamers[index];
+
+            if (streamer.platform === "TWITCH") {
+
+                const { live } = await this.twitchScrapper.verifyChannel(streamer.channelName);
+                streamer = {...streamer, live };
+            }
+
         });
     }
 

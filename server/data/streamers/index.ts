@@ -18,6 +18,30 @@ export const stramers: streamers = [
 
         live: false,
         href: ""
+    },
+
+    {
+        id: 2,
+        channelName: "summit1g",
+        platform: "TWITCH",
+
+        live: false
+    },
+
+    {
+        id: 3,
+        channelName: "shroud",
+        platform: "TWITCH",
+
+        live: false
+    },
+
+    {
+        id: 4,
+        channelName: "tecnosh",
+        platform: "TWITCH",
+
+        live: false
     }
 ]
 

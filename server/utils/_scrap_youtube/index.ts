@@ -1,25 +1,16 @@
 import puppeteer, { Browser } from 'puppeteer';
+
 import { YoutubeScrapChannelStatus } from './@types';
 
-export class YoutubeScrap {
+import { wait } from '../../helpers/wait';
+
+export class YoutubeScrapper {
     
     private browser: Browser | undefined;
 
     constructor() {
 
         puppeteer.launch({ headless: false }).then(browser => this.browser = browser);
-
-        setInterval(() => {
-
-            this.verifyChannel("Swagg");
-
-        }, 5 * 1000);
-
-    }
-
-    public wait(ms: number) {
-
-        return new Promise(resolve => setInterval(resolve, ms));
     }
 
     public async verifyChannel(channelUserName: string): Promise<YoutubeScrapChannelStatus> {
@@ -36,7 +27,7 @@ export class YoutubeScrap {
             const page = await browser.newPage();
 
             await page.goto(url);
-            await this.wait(3500);
+            await wait(3500);
 
             const liveURL = await page.evaluate(() => {
 

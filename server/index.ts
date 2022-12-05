@@ -23,6 +23,7 @@ app.prepare().then(async () => {
     // Scrappers
     const core = new Core();
     
+    app.get("/getStreamers", core.getStreamersRoute);
 
     app.all("*", (req, res) => nextHandler(req, res));
 
